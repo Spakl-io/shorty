@@ -82,10 +82,9 @@ services:
       # - --tracing.serviceName=zsvc.treafik
       # - --tracing.jaeger
       # - --tracing.jaeger.collector.endpoint=https://otel.ops.spakl.io/v1/traces
-      # - --experimental.localplugins.shorty
-      - --experimental.localplugins.shorty.moduleName=gitlab.com/spakl/shorty
-      # - --experimental.plugins.shorty.moduleName=shorty
-      # - --experimental.localplugins.shorty.version=latest
+      # - --experimental.localplugins.shorty.moduleName=gitlab.com/spakl/shorty
+      - --experimental.plugins.shorty.moduleName=gitlab.com/spakl/shorty
+      - --experimental.plugins.shorty.version=v0.0.1
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`localhost`)"
