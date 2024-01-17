@@ -16,7 +16,7 @@ release:
 	@echo "Changelog:"
 	@echo "$(RELEASE_MESSAGE)"
 	git tag -a $(RELEASE_VERSION) -m "$(RELEASE_MESSAGE)"
-	git push origin --tag $(RELEASE_VERSION)
+	git push origin master --tag $(RELEASE_VERSION)
 build:
 	go build -o ./bin/shorty.so -buildmode=plugin .
 

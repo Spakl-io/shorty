@@ -1,3 +1,3 @@
-module gitlab.com/spakl/shorty
+module github.com/Spakl-io/shorty
 
 go 1.20
