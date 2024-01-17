@@ -83,8 +83,9 @@ services:
       # - --tracing.jaeger
       # - --tracing.jaeger.collector.endpoint=https://otel.ops.spakl.io/v1/traces
       # - --experimental.localplugins.shorty.moduleName=gitlab.com/spakl/shorty
-      - --experimental.plugins.shorty.moduleName=gitlab.com/spakl/shorty
+      - --experimental.plugins.shorty.moduleName=github.com/Spakl-io/shorty
       - --experimental.plugins.shorty.version=v0.0.1
+      # - --experimental.plugins.shorty.version=latest
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`localhost`)"
@@ -98,11 +99,11 @@ services:
       
       - "traefik.http.routers.shorty.rule=Host(`shorty.localhost`)"
       - "traefik.http.routers.shorty.service=traefik-shorty@docker"
-      - "traefik.http.routers.shorty.middlewares=shorty1@docker"
-      - "traefik.http.middlewares.shorty1.plugin.shorty.links.proxmox=https://proxmox.ops.spakl.io"
-      - "traefik.http.middlewares.shorty1.plugin.shorty.links.proxmox2=https://proxmox.ops.spakl.io"
-      - "traefik.http.middlewares.shorty1.plugin.shorty.links.proxmox2=https://ops.spakl.io"
-      - "traefik.http.middlewares.shorty1.plugin.shorty.links.google=https://google.com"
+      - "traefik.http.routers.shorty.middlewares=my-shorty@docker"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.proxmox=https://proxmox.ops.spakl.io"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.proxmox2=https://proxmox.ops.spakl.io"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.proxmox2=https://ops.spakl.io"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.google=https://google.com"
 
     # depends_on:
       # - traefik_certs_init
