@@ -60,15 +60,15 @@ services:
   traefik:
     # ... Traefik configuration ...
     command:
-      - "--experimental.plugins.shorty.moduleName=github.com/your-username/shorty"
-      - "--experimental.plugins.shorty.version=v0.1.0"
+      - "--experimental.plugins.shorty.moduleName=github.com/Spakl-io/shorty"
+      - "--experimental.plugins.shorty.version=v1.0.0"
     # other configurations...
 
   your-service:
     image: your-service-image
     labels:
       - "traefik.http.routers.shorty.rule=Host(`shorty.localhost`)"
-      - "traefik.http.routers.shorty.service=your-service@docker"
+      - "traefik.http.routers.shorty.service=traefik-shorty@docker"
       - "traefik.http.routers.shorty.middlewares=shorty1@docker"
       - "traefik.http.middlewares.shorty1.plugin.shorty.links.proxmox=https://proxmox.ops.spakl.io"
       - "traefik.http.middlewares.shorty1.plugin.shorty.links.proxmox2=https://proxmox2.ops.spakl.io"
