@@ -14,17 +14,17 @@ Shorty is a link shortening middleware for Traefik. It allows you to create shor
    experimental:
      plugins:
        shorty:
-         moduleName: "gitlab.com/spakl/shorty"
-         version: "v0.0.1"
+         moduleName: "github.com/Spakl-io/shorty"
+         version: "v1.0.0"
    ```
 
-   Replace `github.com/your-username/shorty` and `v0.1.0` with the appropriate module name and version of your plugin.
+   Replace `github.com/Spakl-io/shorty` and `v1.0.0` with the appropriate module name and version of your plugin.
 
 2. **Command-Line Configuration**:
    Alternatively, you can configure Traefik to use Shorty via command line:
 
    ```bash
-   traefik --experimental.plugins.shorty.moduleName="github.com/your-username/shorty" --experimental.plugins.shorty.version="v0.1.0"
+   traefik --experimental.plugins.shorty.moduleName="github.com/Spakl-io/shorty" --experimental.plugins.shorty.version="v1.0.0"
    ```
 
 ## Configuration
@@ -37,12 +37,12 @@ Add the following labels to your Docker service to use Shorty. These labels defi
 services:
   your-service:
     labels:
-      - "traefik.http.routers.shorty.rule=Host(`shorty.localhost`)"
+      - "traefik.http.routers.shorty.rule=Host(`shorty.io`)"
       - "traefik.http.routers.shorty.service=traefik-shorty@docker"
-      - "traefik.http.routers.shorty.middlewares=shorty1@docker"
-      - "traefik.http.middlewares.shorty1.plugin.shorty.links.proxmox=https://proxmox.ops.spakl.io"
-      - "traefik.http.middlewares.shorty1.plugin.shorty.links.proxmox2=https://proxmox2.ops.spakl.io"
-      - "traefik.http.middlewares.shorty1.plugin.shorty.links.google=https://google.com"
+      - "traefik.http.routers.shorty.middlewares=my-shorty@docker"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.proxmox=https://proxmox.ops.spakl.io"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.proxmox2=https://proxmox2.ops.spakl.io"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.google=https://google.com"
 ```
 
 ### Setting Up a Domain Name
