@@ -6,3 +6,4 @@ import: github.com/Spakl-io/shorty
 testData:
   links:
     test1: https://google.com
+    test2: https://google.com
