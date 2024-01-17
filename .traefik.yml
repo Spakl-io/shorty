@@ -1,0 +1,8 @@
+displayName: Shorty
+summary: A simple Link Shortener for traefik  
+type: middleware
+import: gitlab.com/spakl/shorty
+compatibility: v2.10
+testData:
+  links:
+    test1: https://google.com
