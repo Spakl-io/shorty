@@ -22,7 +22,7 @@ volumes:
 
 services:
   traefik:
-    image: traefik:v2.10.7
+    image: traefik:v2.11
     container_name: "traefik"
     restart: unless-stopped
     hostname: "traefik"
@@ -37,7 +37,7 @@ services:
       - proxy
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./:/plugins-local/src/gitlab.com/spakl/shorty"
+      - "./:/plugins-local/src/github.com/Spakl-io/shorty"
       - "tls-certs:/certs"
     environment:
       - CF_API_EMAIL
@@ -45,11 +45,11 @@ services:
     command:
       - --api
       - --api.dashboard
-      # - --certificatesresolvers.cloudflare
-      # - --certificatesresolvers.cloudflare.acme.dnschallenge
-      # - --certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare
-      # - --certificatesresolvers.cloudflare.acme.dnschallenge.resolvers=1.1.1.1:53
-      # - --certificatesresolvers.cloudflare.acme.storage=certs/acme.json
+      - --certificatesresolvers.cloudflare
+      - --certificatesresolvers.cloudflare.acme.dnschallenge
+      - --certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.cloudflare.acme.dnschallenge.resolvers=1.1.1.1:53
+      - --certificatesresolvers.cloudflare.acme.storage=certs/acme.json
 
       - --global.checknewversion=false
       - --global.sendanonymoususage=false
@@ -82,8 +82,8 @@ services:
       # - --tracing.serviceName=zsvc.treafik
       # - --tracing.jaeger
       # - --tracing.jaeger.collector.endpoint=https://otel.ops.spakl.io/v1/traces
-      # - --experimental.localplugins.shorty.moduleName=gitlab.com/spakl/shorty
-      - --experimental.plugins.shorty.moduleName=github.com/Spakl-io/shorty
+      # - --experimental.localplugins.shorty.moduleName=github.com/Spakl-io/shorty
+      - --experimental.plugins.shorty.modulename=github.com/spakl-io/shorty
       - --experimental.plugins.shorty.version=v1.0.0
       # - --experimental.plugins.shorty.version=latest
     labels:
@@ -92,12 +92,12 @@ services:
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.service=api@internal"
-      # - "traefik.http.routers.traefik.tls.certresolver=cloudflare"
-      # - "traefik.http.routers.traefik.tls.domains[0].main=zsvc.spakl.io"
-      # - "traefik.http.routers.traefik.tls.domains[0].sans=*.zsvc.spakl.io"
 
       
       - "traefik.http.routers.shorty.rule=Host(`shorty.localhost`)"
+      # - "traefik.http.routers.shorty.tls.certresolver=cloudflare"
+      # - "traefik.http.routers.shorty.tls.domains[0].main=zsvc.spakl.io"
+      # - "traefik.http.routers.shorty.tls.domains[0].sans=*.zsvc.spakl.io"
       - "traefik.http.routers.shorty.service=traefik-shorty@docker"
       - "traefik.http.routers.shorty.middlewares=my-shorty@docker"
       - "traefik.http.middlewares.my-shorty.plugin.shorty.links.proxmox=https://proxmox.ops.spakl.io"
