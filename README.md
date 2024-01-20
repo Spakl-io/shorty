@@ -18,13 +18,13 @@ Shorty is a link shortening middleware for Traefik. It allows you to create shor
          version: "v1.0.0"
    ```
 
-   Replace `github.com/Spakl-io/shorty` and `v1.0.0` with the appropriate module name and version of your plugin.
+   Replace `v1.0.0` with the version of your desire.
 
 2. **Command-Line Configuration**:
    Alternatively, you can configure Traefik to use Shorty via command line:
 
    ```bash
-   traefik --experimental.plugins.shorty.moduleName="github.com/Spakl-io/shorty" --experimental.plugins.shorty.version="v1.0.0"
+   traefik --experimental.plugins.shorty.moduleName=github.com/Spakl-io/shorty --experimental.plugins.shorty.version=v1.0.0
    ```
 
 ## Configuration
@@ -51,7 +51,7 @@ The `Host` rule in the router label defines the domain name. For example, `Host(
 
 ### Example Docker-Compose
 
-Here's an example `docker-compose.yml` snippet:
+Here's a localhost example `docker-compose.yml` snippet:
 
 ```yaml
 version: '3'
@@ -63,9 +63,6 @@ services:
       - "--experimental.plugins.shorty.moduleName=github.com/Spakl-io/shorty"
       - "--experimental.plugins.shorty.version=v1.0.0"
     # other configurations...
-
-  your-service:
-    image: your-service-image
     labels:
       - "traefik.http.routers.shorty.rule=Host(`shorty.localhost`)"
       - "traefik.http.routers.shorty.service=traefik-shorty@docker"
@@ -82,8 +79,3 @@ Once configured, Shorty will intercept requests to the specified short URLs and 
 ## Contributing
 
 Contributions to Shorty are welcome. Please refer to the project's GitHub repository for contribution guidelines.
-
-## License
-
-Specify your license or link to the license file.
-

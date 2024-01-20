@@ -13,36 +13,7 @@ networks:
   proxy:
     external: true
 
-
-
-
-volumes:
-  tls-certs:
-
-
-services:
-  traefik:
-    image: traefik:v2.11
-    container_name: "traefik"
-    restart: unless-stopped
-    hostname: "traefik"
-    # so you can add portainer
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
-      # - "80:80"
-      - "443:443"
-      - 8083:8083
-    networks:
-      - proxy
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./:/plugins-local/src/github.com/Spakl-io/shorty"
-      - "tls-certs:/certs"
-    environment:
-      - CF_API_EMAIL
-      - CF_DNS_API_TOKEN
-    command:
+.withCerts: &withCerts
       - --api
       - --api.dashboard
       # - --certificatesresolvers.cloudflare
@@ -82,6 +53,36 @@ services:
       # - --tracing.serviceName=zsvc.treafik
       # - --tracing.jaeger
       # - --tracing.jaeger.collector.endpoint=https://otel.ops.spakl.io/v1/traces
+
+
+volumes:
+  tls-certs:
+
+
+services:
+  traefik:
+    image: traefik:v2.11
+    container_name: "traefik"
+    restart: unless-stopped
+    hostname: "traefik"
+    # so you can add portainer
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      # - "80:80"
+      - "443:443"
+      - 8083:8083
+    networks:
+      - proxy
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./:/plugins-local/src/github.com/Spakl-io/shorty"
+      - "tls-certs:/certs"
+    environment:
+      - CF_API_EMAIL
+      - CF_DNS_API_TOKEN
+    command:
+      - *withCerts
       # - --experimental.localplugins.shorty.moduleName=github.com/Spakl-io/shorty
       - --experimental.plugins.shorty.modulename=github.com/Spakl-io/shorty
       - --experimental.plugins.shorty.version=v1.0.0
