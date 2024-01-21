@@ -79,3 +79,4 @@ Once configured, Shorty will intercept requests to the specified short URLs and 
 ## Contributing
 
 Contributions to Shorty are welcome. Please refer to the project's GitHub repository for contribution guidelines.
+
