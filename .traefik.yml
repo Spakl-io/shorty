@@ -2,8 +2,9 @@ displayName: Shorty
 summary: A simple Link Shortener for traefik  
 type: middleware
 import: github.com/Spakl-io/shorty
-# compatibility: v2.10
 testData:
   links:
-    test1: https://google.com
-    test2: https://google.com
+    github: https://github.com
+    gh: https://github.com
+    gitlab: https://gitlab.com
+    gl: https://gitlab.com

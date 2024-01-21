@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: shorty-system
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: 'https://helm.traefik.io/traefik'
+    targetRevision: v24.0.0 # Traefik helm version
+    helm:
+      valueFiles:
+        ### Path in repo to values.yaml
+        - $values/apps/shorty/values.yaml 
+      parameters:
+        - name: installCRDs
+          value: "true" 
+      releaseName: traefik
+    path: traefik/traefik 
+    chart: traefik   
+
+  - repoURL: 'git@gitlab.com:spakl/lab/clusters/clstr.git'   ##### USE YOUR REPO URL
+    targetRevision: master    ## DEPLOY FROM MASTER 
+    ref: values # USED TO BRING IN values.yml
+  
+  destination:
+    namespace: shorty
+    server: https://kubernetes.default.svc
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # Allows ArgoCD to create the namespace if it doesn't exist.

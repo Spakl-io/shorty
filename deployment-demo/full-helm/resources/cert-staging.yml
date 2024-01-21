@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: staging-orty-sh
+  namespace: shorty
+spec:
+  secretName: staging-orty-sh-tls
+  issuerRef:
+    name: orty-sh-letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "*.orty.sh"         ## USE YOUR DOMAIN NAME
+  dnsNames:
+  - "orty.sh"                     ## USE YOUR DOMAIN NAME
+  - "*.orty.sh"                   ## USE YOUR DOMAIN NAME

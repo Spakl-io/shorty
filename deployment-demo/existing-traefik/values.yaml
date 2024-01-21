@@ -1,0 +1,25 @@
+# UPDATE THESE VALUES IN TRAEFIK VALUES.YAML
+
+additionalArguments:
+    ### ADD SHORTY PLUGIN HERE
+  - "--experimental.plugins.shorty.modulename=github.com/Spakl-io/shorty"
+  - "--experimental.plugins.shorty.version=v1.0.0"
+
+deployment:
+  ### THIS IS NEEDED FOR PLUGINS TO WORK ###
+  additionalVolumes:
+  - name: plugins
+
+### THIS IS NEEDED FOR PLUGINS TO WORK ###
+additionalVolumeMounts:
+- name: plugins
+  mountPath: /plugins-storage
+
+
+
+providers:
+  kubernetesCRD:
+    enabled: true
+    ingressClass: traefik           # USE THIS INGRESS CLASS NAME
+    allowExternalNameServices: true # make sure this is true
+

@@ -1,0 +1,29 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: shorty-ingress
+  namespace: shorty
+  annotations: 
+    kubernetes.io/ingress.class: shorty
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`orty.sh`)
+      kind: Rule
+      middlewares:
+        - name: links
+      services:
+        - name: ping@internal
+          kind: TraefikService
+
+    # enable for traefik dashboard
+    # - match: Host(`traefik.orty.sh`)
+    #   kind: Rule
+    #   services:
+    #     - name: api@internal
+    #       kind: TraefikService
+    
+  tls:
+    secretName: orty-sh-tls
+    # secretName: staging-orty-sh-tls

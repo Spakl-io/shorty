@@ -1,0 +1,66 @@
+globalArguments:
+  - "--global.sendanonymoususage=false"
+  - "--global.checknewversion=false"
+
+additionalArguments:
+  - "--serversTransport.insecureSkipVerify=true"
+  - "--log.level=DEBUG"
+    ### ADD SHORTY PLUGIN HERE
+  - "--experimental.plugins.shorty.modulename=github.com/Spakl-io/shorty"
+  - "--experimental.plugins.shorty.version=v1.0.0"
+
+
+deployment:
+  enabled: true
+  replicas: 1
+  annotations: {}
+  podAnnotations: {}
+  additionalContainers: []
+  initContainers: []
+  ### THIS IS NEEDED FOR PLUGINS TO WORK ###
+  additionalVolumes:
+  - name: plugins
+
+### THIS IS NEEDED FOR PLUGINS TO WORK ###
+additionalVolumeMounts:
+- name: plugins
+  mountPath: /plugins-storage
+
+
+
+ports:
+  web:
+    redirectTo: websecure
+  websecure:
+    tls:
+      enabled: true
+
+ingressRoute:
+  dashboard:
+    enabled: false
+
+providers:
+  kubernetesCRD:
+    enabled: true
+    ingressClass: shorty
+    allowExternalNameServices: true
+    allowCrossNamespace: false
+
+  kubernetesIngress:
+    enabled: false
+    allowExternalNameServices: true
+    publishedService:
+      enabled: false
+
+rbac:
+  enabled: true
+
+service:
+  enabled: true
+  type: LoadBalancer
+  annotations: {}
+  labels: {}
+  spec:
+    loadBalancerIP: 10.10.4.122 # this should be an available IP
+  loadBalancerSourceRanges: []
+  externalIPs: []

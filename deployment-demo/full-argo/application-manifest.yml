@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: shorty-sync
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'git@gitlab.com:spakl/lab/clusters/clstr.git' # Replace with your repository
+    targetRevision: master
+    path: 'apps/shorty' # Replace with the path to your Shorty configurations
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: shorty
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

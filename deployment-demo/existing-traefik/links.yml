@@ -1,0 +1,13 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+    name: links
+    namespace: shorty
+spec:
+    plugin:
+        shorty:
+            links:
+                gitlab: "https://gitlab.com"
+                gl: https://gitlab.com
+                github: https://github.com
+                gh: https://github.com
