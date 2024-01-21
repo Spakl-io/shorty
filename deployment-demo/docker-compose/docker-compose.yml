@@ -1,0 +1,148 @@
+version: '3.2'
+
+## CREATE PROXY NETWORK ##
+# networks:
+#   proxy:
+#     driver: bridge
+#     name: proxy
+#     attachable: true
+#     ipam:
+#       config:
+#         - subnet: 192.160.0.0/24
+#           gateway: 192.160.0.1
+
+## PROXY NETWORK EXISTS ##
+networks:
+  proxy:
+    external: true
+
+volumes:
+  tls-certs:
+
+services:
+  # traefik_certs_init:
+    # image: alpine:latest
+    # container_name: "traefik_certs_init"
+    # hostname: "traefik_certs_init"
+    # networks:
+      # - proxy
+    # volumes:
+      # - "tls-certs:/certs"
+    # command:
+      # - sh
+      # - -c
+      # - |
+        # mkdir -p /certs &&
+        # touch /certs/acme.json &&
+        # chmod 600 /certs/acme.json
+
+        
+  shorty:
+    image: traefik:v2.11
+    container_name: shorty
+    restart: unless-stopped
+    # depends_on: # IF USING CERT INIT CONTAINER
+      # - traefik_certs_init
+    hostname: shorty
+    # so you can add portainer
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      # - "80:80"   # WEB
+      - "443:443" # WEBSECURE
+      # - 8083:8083 # METRICS
+    networks:
+      - proxy
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      # RUN AS LOCAL PLUGIN
+      - "../../:/plugins-local/src/github.com/Spakl-io/shorty"
+      - "tls-certs:/certs"
+    environment:
+      # CLOUDFLARE ACME 
+      - CF_API_EMAIL
+      - CF_DNS_API_TOKEN
+    command:
+      - --global.checknewversion=false
+      - --global.sendanonymoususage=false
+      - --serverstransport.insecureskipverify
+      - --api
+      - --api.dashboard
+
+      # ENABLE ACME
+      # - --certificatesresolvers.cloudflare
+      # - --certificatesresolvers.cloudflare.acme.dnschallenge
+      # - --certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare
+      # - --certificatesresolvers.cloudflare.acme.dnschallenge.resolvers=1.1.1.1:53
+      # - --certificatesresolvers.cloudflare.acme.storage=certs/acme.json
+
+      - --entryPoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      
+      - --entryPoints.websecure.address=:443
+      - --entrypoints.websecure.forwardedheaders.insecure
+      - --entrypoints.websecure.http.tls
+      
+      - --entryPoints.private.address=:8083
+      
+      - --ping=true
+      - --ping.entryPoint=private
+
+      - --providers.docker=true
+      - --providers.docker.endpoint=unix:///var/run/docker.sock
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=proxy
+
+      - --metrics.prometheus
+      - --metrics.prometheus.addentrypointslabels
+      - --metrics.prometheus.addrouterslabels
+      - --metrics.prometheus.addserviceslabels
+      - --metrics.prometheus.manualrouting=true
+      - --metrics.prometheus.entrypoint=private
+
+      # - --log.format=JSON
+      - --log.level=ERROR
+
+      # - --accesslog
+      
+      # - --tracing=false
+      # - --tracing.serviceName=shorty
+      # - --tracing.jaeger
+      # - --tracing.jaeger.collector.endpoint=https://otel.ops.spakl.io/v1/traces
+
+      - --experimental.plugins.shorty.modulename=github.com/Spakl-io/shorty
+      - --experimental.plugins.shorty.version=v1.0.0
+
+      # - --experimental.localplugins.shorty.moduleName=github.com/Spakl-io/shorty
+
+    labels:
+      ##################### Traefik Dashboard
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.service=api@internal"
+
+      ##################### SHORTY ROUTER
+      - "traefik.http.routers.shorty.rule=Host(`shorty.localhost`)"
+      # - "traefik.http.routers.shorty.tls.certresolver=cloudflare"
+      # - "traefik.http.routers.shorty.tls.domains[0].main=orty.sh"
+      # - "traefik.http.routers.shorty.tls.domains[0].sans=*.orty.sh"
+      - "traefik.http.routers.shorty.service=ping@internal"
+      - "traefik.http.routers.shorty.middlewares=my-shorty@docker"
+
+      ####################################################################################
+      ################################ ADD LINKS HERE ####################################
+      ####################################################################################
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.gitlab=https://gitlab.com"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.gl=https://gitlab.com"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.github=https://github.com"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.gh=https://github.com"
+      - "traefik.http.middlewares.my-shorty.plugin.shorty.links.google=https://google.com"
+
+
+      ####################################################################################
+      ####################################################################################
+      ####################################################################################
+
+
