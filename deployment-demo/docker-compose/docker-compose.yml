@@ -111,7 +111,7 @@ services:
       # - --tracing.jaeger.collector.endpoint=https://otel.ops.spakl.io/v1/traces
 
       - --experimental.plugins.shorty.modulename=github.com/Spakl-io/shorty
-      - --experimental.plugins.shorty.version=v1.0.0
+      - --experimental.plugins.shorty.version=v1.0.1
 
       # - --experimental.localplugins.shorty.moduleName=github.com/Spakl-io/shorty
 
